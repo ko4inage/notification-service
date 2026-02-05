@@ -1,4 +1,31 @@
 app:
   name: notification-service
+  inbox:
+    batch-size: 50
+    delay-ms: 1000
 
+server:
+  port: 8081
 
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5445/pgConsumer
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop  # update, create, create-drop, validate, none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+
+  sql:
+    init:
+      mode: always
