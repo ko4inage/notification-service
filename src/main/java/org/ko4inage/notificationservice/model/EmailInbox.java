@@ -10,7 +10,7 @@ import java.util.UUID;
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Entity
 @Table(name = "email_inbox", schema = "public")
 public class EmailInbox {

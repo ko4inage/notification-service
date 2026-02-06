@@ -10,6 +10,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import java.util.HashMap;
@@ -25,6 +26,7 @@ public class KafkaConsumerConfig {
         configProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         configProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "notification-service-v1");
         configProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        configProperties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
 
         JsonDeserializer<Message> jsonDeserializer = new JsonDeserializer<>(Message.class, objectMapper);
         jsonDeserializer.addTrustedPackages("*");
@@ -43,6 +45,10 @@ public class KafkaConsumerConfig {
         var containerFactory = new ConcurrentKafkaListenerContainerFactory<String, Message>();
         containerFactory.setConcurrency(1);
         containerFactory.setConsumerFactory(consumerFactory);
+
+        ContainerProperties props = containerFactory.getContainerProperties();
+        props.setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE); //ручной коммит
+
         return containerFactory;
     }
 }
