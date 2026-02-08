@@ -12,7 +12,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "telegram_inbox", schema = "public")
+@Table(
+        name = "telegram_inbox",
+        schema = "public",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"key", "value"})
+)
 public class TelegramInbox {
 
     @Id

@@ -12,7 +12,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "push_inbox", schema = "public")
+@Table(
+        name = "push_inbox",
+        schema = "public",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"key", "value"})
+)
 public class PushInbox {
 
     @Id

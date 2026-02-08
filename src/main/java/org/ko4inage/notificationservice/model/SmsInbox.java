@@ -12,7 +12,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "sms_inbox", schema = "public")
+@Table(
+        name = "sms_inbox",
+        schema = "public",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"key", "value"})
+)
 public class SmsInbox {
 
     @Id

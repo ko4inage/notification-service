@@ -24,8 +24,12 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-    show-sql: true
+    show-sql: false
 
   sql:
     init:
       mode: always
+
+logging:
+  level:
+    org.apache.kafka.clients.NetworkClient: ERROR
