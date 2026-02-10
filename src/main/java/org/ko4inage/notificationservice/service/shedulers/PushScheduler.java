@@ -29,7 +29,7 @@ public class PushScheduler {
             try {
                 inboxHandler.handle(msg);
                 pushInboxService.setProcessed(msg.getId());
-            } catch (RuntimeException e) {
+            } catch (RuntimeException | InterruptedException e) {
                 pushInboxService.incrementAttempt(msg.getId());
             }
         }

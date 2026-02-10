@@ -29,7 +29,7 @@ public class EmailScheduler {
             try {
                 inboxHandler.handle(msg);
                 emailInboxService.setProcessed(msg.getId());
-            } catch (RuntimeException e) {
+            } catch (RuntimeException | InterruptedException e) {
                 emailInboxService.incrementAttempt(msg.getId());
             }
         }

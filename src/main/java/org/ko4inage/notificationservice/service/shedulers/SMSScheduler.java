@@ -29,7 +29,7 @@ public class SMSScheduler {
             try {
                 inboxHandler.handle(msg);
                 smsInboxService.setProcessed(msg.getId());
-            } catch (RuntimeException e) {
+            } catch (RuntimeException | InterruptedException e) {
                 smsInboxService.incrementAttempt(msg.getId());
             }
         }

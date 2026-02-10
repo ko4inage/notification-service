@@ -29,7 +29,7 @@ public class TGScheduler {
             try {
                 inboxHandler.handle(msg);
                 telegramInboxService.setProcessed(msg.getId());
-            } catch (RuntimeException e) {
+            } catch (RuntimeException | InterruptedException e) {
                 telegramInboxService.incrementAttempt(msg.getId());
             }
         }

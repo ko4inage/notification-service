@@ -19,7 +19,6 @@ import java.util.UUID;
 @Slf4j
 public class EmailInboxService implements BaseInboxService<EmailInbox> {
 
-    //private InboxRepository<EmailInbox> emailRepository;
     private final EmailRepository emailRepository;
 
     @Override
