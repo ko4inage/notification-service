@@ -1,9 +1,10 @@
-package org.ko4inage.notificationservice.service.shedulers;
+package org.ko4inage.notificationservice.service.shedulers.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.ko4inage.notificationservice.config.InboxProperties;
 import org.ko4inage.notificationservice.model.TelegramInbox;
 import org.ko4inage.notificationservice.service.Inbox.TelegramInboxService;
+import org.ko4inage.notificationservice.service.shedulers.Scheduler;
 import org.ko4inage.notificationservice.service.shedulers.handler.InboxHandler;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class TGScheduler {
+public class TGScheduler implements Scheduler {
 
     private final TelegramInboxService telegramInboxService;
     private final InboxProperties properties;

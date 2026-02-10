@@ -1,9 +1,10 @@
-package org.ko4inage.notificationservice.service.shedulers;
+package org.ko4inage.notificationservice.service.shedulers.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.ko4inage.notificationservice.config.InboxProperties;
 import org.ko4inage.notificationservice.model.PushInbox;
 import org.ko4inage.notificationservice.service.Inbox.PushInboxService;
+import org.ko4inage.notificationservice.service.shedulers.Scheduler;
 import org.ko4inage.notificationservice.service.shedulers.handler.InboxHandler;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class PushScheduler {
+public class PushScheduler implements Scheduler {
 
     private final PushInboxService pushInboxService;
     private final InboxProperties properties;
@@ -34,5 +35,4 @@ public class PushScheduler {
             }
         }
     }
-
 }
