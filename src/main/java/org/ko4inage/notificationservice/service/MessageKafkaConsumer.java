@@ -6,18 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.ko4inage.notificationservice.dto.Message;
-import org.ko4inage.notificationservice.service.impl.EmailInboxService;
-import org.ko4inage.notificationservice.service.impl.PushInboxService;
-import org.ko4inage.notificationservice.service.impl.SmsInboxService;
-import org.ko4inage.notificationservice.service.impl.TelegramInboxService;
+import org.ko4inage.notificationservice.service.Inbox.*;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -36,7 +31,7 @@ public class MessageKafkaConsumer {
             @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
             Acknowledgment ack
     ) {
-        handle(message, key, topic, smsInboxService, ack);
+        handleEvent(message, key, topic, smsInboxService, ack);
     }
 
     @KafkaListener(topics = "email-events")
@@ -46,7 +41,7 @@ public class MessageKafkaConsumer {
             @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
             Acknowledgment ack
     ) {
-        handle(message, key, topic, emailInboxService, ack);
+        handleEvent(message, key, topic, emailInboxService, ack);
     }
 
     @KafkaListener(topics = "push-events")
@@ -56,7 +51,7 @@ public class MessageKafkaConsumer {
             @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
             Acknowledgment ack
     ) {
-        handle(message, key, topic, pushInboxService, ack);
+        handleEvent(message, key, topic, pushInboxService, ack);
     }
 
     @KafkaListener(topics = "telegram-events")
@@ -66,7 +61,7 @@ public class MessageKafkaConsumer {
             @Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
             Acknowledgment ack
     ) {
-        handle(message, key, topic, telegramInboxService, ack);
+        handleEvent(message, key, topic, telegramInboxService, ack);
     }
 
     private String convertToJson(Message message){
@@ -80,11 +75,11 @@ public class MessageKafkaConsumer {
         return json;
     }
 
-    private <T> void handle(
+    private <T> void handleEvent(
             Message message,
             String key,
             String topic,
-            @NonNull BaseNotificationService<T> service,
+            @NonNull BaseInboxService<T> service,
             Acknowledgment ack
     ) {
         String value = convertToJson(message);
@@ -94,7 +89,7 @@ public class MessageKafkaConsumer {
             return;
         }
 
-        service.create(key, value, topic).ifPresent(saved -> ack.acknowledge());
+        service.saveEvent(key, value, topic).ifPresent(saved -> ack.acknowledge());
 
     }
 }

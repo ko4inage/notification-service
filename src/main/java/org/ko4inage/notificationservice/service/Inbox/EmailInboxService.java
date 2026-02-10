@@ -1,26 +1,30 @@
-package org.ko4inage.notificationservice.service.impl;
+package org.ko4inage.notificationservice.service.Inbox;
 
-import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ko4inage.notificationservice.model.EmailInbox;
 import org.ko4inage.notificationservice.repo.EmailRepository;
-import org.ko4inage.notificationservice.service.BaseNotificationService;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 @Slf4j
-public class EmailInboxService implements BaseNotificationService<EmailInbox> {
+public class EmailInboxService implements BaseInboxService<EmailInbox> {
 
+    //private InboxRepository<EmailInbox> emailRepository;
     private final EmailRepository emailRepository;
 
     @Override
     @Transactional
-    public Optional<EmailInbox> create(
+    public Optional<EmailInbox> saveEvent(
             String key,
             String message,
             String topic
@@ -42,7 +46,27 @@ public class EmailInboxService implements BaseNotificationService<EmailInbox> {
     }
 
     @Override
+    @Transactional
     public boolean existsByKeyAndValue(String key, String value){
         return emailRepository.existsByKeyAndValue(key, value);
     }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void incrementAttempt(UUID id) {
+        emailRepository.incrementAttempt(id);
+    }
+
+    @Override
+    @Transactional
+    public void setProcessed(UUID id) {
+        emailRepository.setProcessedTrue(id);
+    }
+
+    @Override
+    @Transactional
+    public List<EmailInbox> findBatch(Pageable limit) {
+        return emailRepository.findBatch(limit);
+    }
+
 }

@@ -1,26 +1,30 @@
-package org.ko4inage.notificationservice.service.impl;
+package org.ko4inage.notificationservice.service.Inbox;
 
-import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.ko4inage.notificationservice.model.SmsInbox;
 import org.ko4inage.notificationservice.repo.SmsRepository;
-import org.ko4inage.notificationservice.service.BaseNotificationService;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 @Slf4j
-public class SmsInboxService implements BaseNotificationService<SmsInbox> {
+public class SmsInboxService implements BaseInboxService<SmsInbox> {
 
+    //private InboxRepository<SmsInbox> smsRepository;
     private final SmsRepository smsRepository;
 
     @Override
     @Transactional
-    public Optional<SmsInbox> create(
+    public Optional<SmsInbox> saveEvent(
             String key,
             String message,
             String topic
@@ -42,7 +46,27 @@ public class SmsInboxService implements BaseNotificationService<SmsInbox> {
     }
 
     @Override
+    @Transactional
     public boolean existsByKeyAndValue(String key, String value){
         return smsRepository.existsByKeyAndValue(key, value);
     }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void incrementAttempt(UUID id) {
+        smsRepository.incrementAttempt(id);
+    }
+
+    @Override
+    @Transactional
+    public void setProcessed(UUID id) {
+        smsRepository.setProcessedTrue(id);
+    }
+
+    @Override
+    @Transactional
+    public List<SmsInbox> findBatch(Pageable limit) {
+        return smsRepository.findBatch(limit);
+    }
+
 }

@@ -1,27 +1,29 @@
-package org.ko4inage.notificationservice.service.impl;
+package org.ko4inage.notificationservice.service.Inbox;
 
-import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.ko4inage.notificationservice.model.PushInbox;
 import org.ko4inage.notificationservice.model.TelegramInbox;
 import org.ko4inage.notificationservice.repo.TelegramRepository;
-import org.ko4inage.notificationservice.service.BaseNotificationService;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 @Slf4j
-public class TelegramInboxService implements BaseNotificationService<TelegramInbox> {
+public class TelegramInboxService implements BaseInboxService<TelegramInbox> {
 
     private final TelegramRepository telegramRepository;
 
     @Override
     @Transactional
-    public Optional<TelegramInbox> create(
+    public Optional<TelegramInbox> saveEvent(
             String key,
             String message,
             String topic
@@ -43,7 +45,27 @@ public class TelegramInboxService implements BaseNotificationService<TelegramInb
     }
 
     @Override
+    @Transactional
     public boolean existsByKeyAndValue(String key, String value){
         return telegramRepository.existsByKeyAndValue(key, value);
     }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void incrementAttempt(UUID id) {
+        telegramRepository.incrementAttempt(id);
+    }
+
+    @Override
+    @Transactional
+    public void setProcessed(UUID id) {
+        telegramRepository.setProcessedTrue(id);
+    }
+
+    @Override
+    @Transactional
+    public List<TelegramInbox> findBatch(Pageable limit) {
+        return telegramRepository.findBatch(limit);
+    }
+
 }

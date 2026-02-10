@@ -29,7 +29,6 @@ public class KafkaConsumerConfig {
         configProperties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
 
         JsonDeserializer<Message> jsonDeserializer = new JsonDeserializer<>(Message.class, objectMapper);
-        jsonDeserializer.addTrustedPackages("*");
 
         return new DefaultKafkaConsumerFactory<>(
                 configProperties,
@@ -45,7 +44,6 @@ public class KafkaConsumerConfig {
         var containerFactory = new ConcurrentKafkaListenerContainerFactory<String, Message>();
         containerFactory.setConcurrency(1);
         containerFactory.setConsumerFactory(consumerFactory);
-
         ContainerProperties props = containerFactory.getContainerProperties();
         props.setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE); //ручной коммит
 
