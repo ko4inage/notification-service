@@ -19,7 +19,6 @@ import java.util.UUID;
 @Slf4j
 public class SmsInboxService implements BaseInboxService<SmsInbox> {
 
-    //private InboxRepository<SmsInbox> smsRepository;
     private final SmsRepository smsRepository;
 
     @Override

@@ -24,7 +24,7 @@ public class KafkaConsumerConfig {
     public ConsumerFactory<String, Message> consumerFactory(ObjectMapper objectMapper){
         Map<String,Object> configProperties = new HashMap<>();
         configProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        configProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "notification-service-v2");
+        configProperties.put(ConsumerConfig.GROUP_ID_CONFIG, "notification-service-v1");
         configProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         configProperties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
 

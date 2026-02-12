@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "app.inbox")
 @Data
 public class InboxProperties {
+
     private int batchSize;
     private long delayMs;
 }
